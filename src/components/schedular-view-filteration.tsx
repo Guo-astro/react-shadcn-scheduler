@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; // Ensure these components are correctly set up
 import MonthView from "./MonthlyView/MonthView";
 import WeeklyView from "./week-view";
-import DailyView from "./daily-view";
+import DailyView from "./DailyView/DailyView";
 
 // Animation settings for Framer Motion
 const animationConfig = {

@@ -1,4 +1,3 @@
-// components/HoursColumn.tsx
 import React from "react";
 import { motion } from "framer-motion";
 
@@ -33,7 +32,6 @@ const HoursColumn: React.FC<HoursColumnProps> = ({ hours }) => {
         <motion.div
           key={`hour-${index}`}
           variants={itemVariants}
-          data-testid={`hour-${index}`}
           className="cursor-pointer transition duration-300 p-4 h-[64px] text-left text-sm text-muted-foreground border-b border-default-200"
         >
           {hour}

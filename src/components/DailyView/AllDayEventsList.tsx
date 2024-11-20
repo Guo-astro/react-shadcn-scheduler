@@ -1,32 +1,25 @@
-// components/AllDayEvents.tsx
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModalEvent } from "@/scheduler-app.types";
 import EventStyled from "../event-styled";
 
-interface AllDayEventsProps {
+interface AllDayEventsListProps {
   events: ModalEvent[];
 }
 
-const AllDayEvents: React.FC<AllDayEventsProps> = ({ events }) => {
+const AllDayEventsList: React.FC<AllDayEventsListProps> = ({ events }) => {
   return (
-    <div data-testid="all-day-events" className="all-day-events">
+    <div className="all-day-events">
       <AnimatePresence mode="wait">
-        {events && events.length > 0
+        {events.length > 0
           ? events.map((event, index) => (
               <motion.div
-                key={`event-${event.id}-${index}`}
+                key={`all-day-event-${event.id}-${index}`}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
               >
-                <EventStyled
-                  event={{
-                    ...event,
-                    minimized: false,
-                  }}
-                  data-testid={`event-${event.id}`}
-                />
+                <EventStyled event={{ ...event, minimized: false }} />
               </motion.div>
             ))
           : "No events for today"}
@@ -35,4 +28,4 @@ const AllDayEvents: React.FC<AllDayEventsProps> = ({ events }) => {
   );
 };
 
-export default AllDayEvents;
+export default AllDayEventsList;

@@ -120,7 +120,7 @@ export default function AddEventModal({
       title: formData.title,
       startDate: formData.startDate,
       endDate: formData.endDate,
-      variant: formData.variant,
+      variant: "success",
       description: formData.description,
     };
 
