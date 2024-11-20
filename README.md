@@ -1,0 +1,2 @@
+pnpm exec playwright test
+

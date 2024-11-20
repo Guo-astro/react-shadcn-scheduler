@@ -1,0 +1,117 @@
+import { TrashIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import { useModalContext } from "../providers/modal-provider";
+import { useScheduler } from "../providers/schedular-provider";
+import { type ModalEvent } from "../scheduler-app.types";
+import AddEventModal from "../modals/add-event-modal";
+
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
+// Function to format date
+const formatDate = (date: Date) => {
+  return date.toLocaleString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+};
+
+interface EventStyledProps extends ModalEvent {
+  minimized?: boolean;
+}
+
+export default function EventStyled({ event }: { event: EventStyledProps }) {
+  const { showModal: showEventModal } = useModalContext();
+  const { handlers } = useScheduler();
+
+  // Handler function to edit event
+  function handleEditEvent(event: ModalEvent) {
+    showEventModal({
+      title: event.title || "Edit Event",
+      body: <AddEventModal />,
+      getter: async () => {
+        return { ...event };
+      },
+    });
+  }
+
+  // Handler function to delete event
+  function handleDeleteEvent(eventId: string) {
+    handlers.handleDeleteEvent(eventId);
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
+      key={event.id}
+      className="w-full relative cursor-pointer border border-gray-300 dark:border-gray-700 rounded-lg flex flex-col flex-grow bg-white dark:bg-gray-800 shadow-sm dark:shadow-md hover:shadow-md dark:hover:shadow-lg transition-shadow duration-200"
+    >
+      <Button
+        variant="ghost"
+        color="danger"
+        size="icon"
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent triggering the edit modal
+          handleDeleteEvent(event.id);
+        }}
+        className="absolute top-2 right-2 p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900"
+        aria-label="Delete Event"
+      >
+        <TrashIcon size={16} className="text-red-500 dark:text-red-400" />
+      </Button>
+
+      {
+        <div
+          onClick={() =>
+            handleEditEvent({
+              id: event.id,
+              title: event.title,
+              startDate: event.startDate,
+              endDate: event.endDate,
+              description: event.description,
+              variant: event.variant,
+            })
+          }
+          className={`flex flex-col flex-grow p-4 ${event.minimized ? "h-full" : "min-h-fit"} rounded-md`}
+        >
+          <h1
+            className={`font-semibold text-lg ${event?.minimized ? "text-sm" : ""} truncate text-gray-900 dark:text-gray-100`}
+          >
+            {event.title}
+          </h1>
+
+          {event.description && (
+            <p
+              className={`text-sm text-gray-600 dark:text-gray-300 mt-1 ${event?.minimized ? "hidden" : "truncate"}`}
+            >
+              {event.description}
+            </p>
+          )}
+
+          {!event.minimized && (
+            <div className="flex justify-between items-center mt-2">
+              <Badge
+                variant="secondary"
+                className="capitalize dark:bg-gray-700 dark:text-gray-200"
+              >
+                {event.variant}
+              </Badge>
+              <div className="flex space-x-1 text-xs text-gray-500 dark:text-gray-400">
+                <span>{formatDate(event.startDate)}</span>
+                <span>-</span>
+                <span>{formatDate(event.endDate)}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      }
+    </motion.div>
+  );
+}

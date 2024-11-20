@@ -1,0 +1,97 @@
+{
+  "name": "react-shadcn-scheduler",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./styles.css": {
+      "require": "./dist/styles.css",
+      "default": "./dist/styles.css"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build && pnpm run build:css",
+    "build:css": "tailwindcss -m -i ./src/tailwind-entry.css -o ./dist/styles.css",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "storybook": "concurrently \"pnpm run storybook:css\" \"storybook dev -p 6006\"",
+    "storybook:css": "tailwindcss -w -i ./src/tailwind-entry.css -o ./src/index.css",
+    "build-storybook": "concurrently \"pnpm run build-storybook:css\" \"storybook build\"",
+    "build-storybook:css": "tailwindcss -m -i ./src/tailwind-entry.css -o ./src/index.css",
+    "prepublishOnly": "pnpm run build",
+    "test-ct": "playwright test -c playwright-ct.config.ts"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@chromatic-com/storybook": "^3.2.2",
+    "@eslint/js": "^9.13.0",
+    "@playwright/experimental-ct-react": "^1.49.0",
+    "@playwright/test": "^1.49.0",
+    "@storybook/addon-essentials": "^8.4.4",
+    "@storybook/addon-interactions": "^8.4.4",
+    "@storybook/addon-links": "^8.4.4",
+    "@storybook/addon-onboarding": "^8.4.4",
+    "@storybook/blocks": "^8.4.4",
+    "@storybook/manager-api": "^8.4.4",
+    "@storybook/react": "^8.4.4",
+    "@storybook/react-vite": "^8.4.4",
+    "@storybook/test": "^8.4.4",
+    "@storybook/theming": "^8.4.4",
+    "@types/node": "^22.9.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
+    "eslint": "^9.13.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "eslint-plugin-storybook": "^0.11.1",
+    "globals": "^15.11.0",
+    "postcss": "^8.4.49",
+    "storybook": "^8.4.4",
+    "tailwindcss": "^3.4.15",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.11.0",
+    "vite": "^5.4.10",
+    "vite-plugin-dts": "^4.3.0"
+  },
+  "packageManager": "pnpm@9.12.2+sha256.2ef6e547b0b07d841d605240dce4d635677831148cd30f6d564b8f4f928f73d2",
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-popover": "^1.1.2",
+    "@radix-ui/react-select": "^2.1.2",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.1",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^11.11.17",
+    "lucide-react": "^0.460.0",
+    "nanoid": "^5.0.8",
+    "react-day-picker": "8.10.1",
+    "react-hook-form": "^7.53.2",
+    "react-icons": "^5.3.0",
+    "tailwind-merge": "^2.5.4",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
+  }
+}
