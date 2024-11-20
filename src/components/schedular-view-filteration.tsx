@@ -9,11 +9,11 @@ import type {
 import { useModalContext } from "../providers/modal-provider";
 import AddEventModal from "../modals/add-event-modal";
 import WeeklyView from "./week-view";
-import MonthView from "./month-view";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; // Ensure these components are correctly set up
 import DailyView from "./daily/DailyView";
+import MonthView from "./monthly/MonthView";
 
 // Animation settings for Framer Motion
 const animationConfig = {

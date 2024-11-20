@@ -2,22 +2,13 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ModalEvent } from "@/scheduler-app.types";
-import { useScheduler } from "@/providers/schedular-provider";
 import EventStyled from "../event-styled";
+import { useHandleEventStyling } from "@/hooks/useHandleEventStyling";
 
 interface TimelineEventsProps {
   events: ModalEvent[];
   dayEvents: ModalEvent[];
 }
-export const useHandleEventStyling = () => {
-  const { handlers } = useScheduler();
-
-  const handleEventStyling = (event: ModalEvent, dayEvents: ModalEvent[]) => {
-    return handlers.handleEventStyling(event, dayEvents);
-  };
-
-  return { handleEventStyling };
-};
 const TimelineEvents: React.FC<TimelineEventsProps> = ({
   events,
   dayEvents,
