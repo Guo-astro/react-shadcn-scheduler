@@ -175,12 +175,28 @@ export const SchedulerProvider = ({
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return days[day] ?? "Unknown";
   };
+  const getEventsForWeek = (
+    currentDate: Date
+  ): Record<number, ModalEvent[]> => {
+    const weekNumber = getWeekNumber(currentDate);
+    const year = currentDate.getFullYear();
+    const daysOfWeek = getDaysInWeek(weekNumber, year);
+
+    const eventsForWeek: Record<number, ModalEvent[]> = {};
+
+    daysOfWeek.forEach((day, index) => {
+      eventsForWeek[index] = getEventsForDay(day.getDate(), currentDate);
+    });
+
+    return eventsForWeek;
+  };
 
   const getters: Getters = {
     getDaysInMonth,
     getEventsForDay,
     getDaysInWeek,
     getWeekNumber,
+    getEventsForWeek,
     getDayName,
   };
 
@@ -233,7 +249,13 @@ export const SchedulerProvider = ({
     }
 
     return {
-      height: `${eventHeight < 10 ? 20 : eventHeight > maxHeight ? maxHeight : eventHeight}px`,
+      height: `${
+        eventHeight < 10
+          ? 20
+          : eventHeight > maxHeight
+          ? maxHeight
+          : eventHeight
+      }px`,
       top: `${eventTop}px`,
       zIndex: indexOnHour + 1,
       left: `${(indexOnHour * 100) / numEventsOnHour}%`,

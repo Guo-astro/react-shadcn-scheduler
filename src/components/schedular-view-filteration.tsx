@@ -8,12 +8,12 @@ import type {
 } from "../scheduler-app.types";
 import { useModalContext } from "../providers/modal-provider";
 import AddEventModal from "../modals/add-event-modal";
-import WeeklyView from "./week-view";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"; // Ensure these components are correctly set up
-import DailyView from "./daily/DailyView";
-import MonthView from "./monthly/MonthView";
+import MonthView from "./MonthlyView/MonthView";
+import WeeklyView from "./week-view";
+import DailyView from "./daily-view";
 
 // Animation settings for Framer Motion
 const animationConfig = {

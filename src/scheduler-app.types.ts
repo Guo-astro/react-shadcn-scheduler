@@ -1,6 +1,11 @@
 import { type Dispatch, type SVGProps } from "react";
 import { z } from "zod";
-
+export interface BadgeData {
+  id: number;
+  color: "primary" | "warning" | "danger" | "success";
+  title: string;
+  description: string;
+}
 export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
@@ -14,7 +19,7 @@ export interface ModalEvent {
   description?: string | undefined;
   startDate: Date;
   endDate: Date;
-  variant?: Variant | undefined;
+  variant: "primary" | "warning" | "danger" | "success";
 }
 
 // Define the state interface for the scheduler
@@ -57,6 +62,7 @@ export interface Getters {
   getDaysInWeek: (week: number, year: number) => Date[];
   getWeekNumber: (date: Date) => number;
   getDayName: (day: number) => string;
+  getEventsForWeek: (currentDate: Date) => Record<number, ModalEvent[]>;
 }
 
 // Define the context value interface

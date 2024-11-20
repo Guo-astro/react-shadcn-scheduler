@@ -5,9 +5,9 @@ import Header from "./Header";
 import DaysOfWeek from "./DaysOfWeek";
 import CalendarGrid from "./CalendarGrid";
 import { useCalendar } from "@/hooks/useCalendar";
-import { useModalHandlers } from "@/hooks/useModalHandlers";
 import { useScheduler } from "@/providers/schedular-provider";
 import { getDaysOfWeek, getStartOffset } from "@/utils/dateUtils";
+import { useModalHandlers } from "@/hooks/useModalHandlers";
 
 interface MonthViewProps {
   prevButton?: React.ReactNode;
@@ -26,7 +26,7 @@ const MonthView: React.FC<MonthViewProps> = ({
   const {
     handleAddEvent: modalAddEvent,
     handleShowMoreEvents: modalShowMoreEvents,
-  } = useModalHandlers();
+  } = useModalHandlers(currentDate);
 
   const weekStartsOn = useScheduler().weekStartsOn; // Assuming useScheduler provides this
   const getters = useScheduler().getters; // Assuming useScheduler provides getters
