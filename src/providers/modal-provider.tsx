@@ -1,5 +1,3 @@
-"use client";
-
 import React, {
   createContext,
   useContext,
@@ -15,34 +13,36 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"; // Adjust the import path based on your project structure
 
-interface ModalContextType {
-  showModal: (config: {
+interface EventDialogContextType {
+  openDialog: (config: {
     title: ReactNode;
     body: ReactNode;
     footer?: ReactNode;
-    modalClassName?: string;
+    dialogCustomClass?: string;
     getter?: () => Promise<any>;
   }) => void;
   onClose: () => void;
   data: any | null;
 }
 
-const ModalContext = createContext<ModalContextType | undefined>(undefined);
+const EventDialogContext = createContext<EventDialogContextType | undefined>(
+  undefined
+);
 
-export const ModalProvider: React.FC<{ children: ReactNode }> = ({
+export const DialogContextProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [modalContent, setModalContent] = useState<{
+  const [dialogDetails, setDialogDetails] = useState<{
     title?: ReactNode;
     body?: ReactNode;
-    modalClassName?: string;
+    dialogCustomClass?: string;
     footer?: ReactNode;
   } | null>(null);
 
   const [data, setData] = useState<any | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const showModal = async ({
+  const displayDialog = async ({
     title,
     body,
     footer,
@@ -55,11 +55,11 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
     modalClassName?: string;
     getter?: () => Promise<any>;
   }) => {
-    setModalContent({
+    setDialogDetails({
       title,
       body,
       footer,
-      modalClassName: modalClassName ?? "",
+      dialogCustomClass: modalClassName ?? "",
     });
 
     if (getter) {
@@ -79,49 +79,53 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({
 
   const onClose = () => {
     setIsOpen(false);
-    setModalContent(null);
+    setDialogDetails(null);
     setData(null);
   };
 
   return (
-    <ModalContext.Provider value={{ showModal, onClose, data }}>
+    <EventDialogContext.Provider
+      value={{ openDialog: displayDialog, onClose, data }}
+    >
       {children}
-      {modalContent && modalContent.title && (
+      {dialogDetails && dialogDetails.title && (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogContent className={modalContent.modalClassName || ""}>
+          <DialogContent className={dialogDetails.dialogCustomClass || ""}>
             {
               <>
                 {
                   <DialogHeader>
-                    <DialogTitle>{modalContent.title}</DialogTitle>
+                    <DialogTitle>{dialogDetails.title}</DialogTitle>
                     <DialogDescription>
-                      {modalContent.title
-                        ? `${modalContent.title} details`
+                      {dialogDetails.title
+                        ? `${dialogDetails.title} details`
                         : "Modal content"}
                     </DialogDescription>
                   </DialogHeader>
                 }
 
-                {modalContent.body && (
-                  <div className="mt-2">{modalContent.body}</div>
+                {dialogDetails.body && (
+                  <div className="mt-2">{dialogDetails.body}</div>
                 )}
-                {modalContent.footer && (
-                  <DialogFooter>{modalContent.footer}</DialogFooter>
+                {dialogDetails.footer && (
+                  <DialogFooter>{dialogDetails.footer}</DialogFooter>
                 )}
               </>
             }
           </DialogContent>
         </Dialog>
       )}
-    </ModalContext.Provider>
+    </EventDialogContext.Provider>
   );
 };
 
 // Hook to use modal context
-export const useModalContext = (): ModalContextType => {
-  const context = useContext(ModalContext);
+export const useEventDialogContext = (): EventDialogContextType => {
+  const context = useContext(EventDialogContext);
   if (!context) {
-    throw new Error("useModalContext must be used within a ModalProvider");
+    throw new Error(
+      "useEventDialogContext must be used within a ModalProvider"
+    );
   }
   return context;
 };

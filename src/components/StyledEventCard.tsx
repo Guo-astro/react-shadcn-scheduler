@@ -1,9 +1,9 @@
 import { TrashIcon } from "lucide-react";
 import { motion } from "framer-motion";
-import { useModalContext } from "../providers/modal-provider";
-import { useScheduler } from "../providers/schedular-provider";
-import { type ModalEvent } from "../scheduler-app.types";
-import AddEventModal from "../modals/add-event-modal";
+import { useEventDialogContext } from "../providers/modal-provider";
+import { useShadcnScheduler } from "../providers/shadcn-scheduler-provider";
+import { type ScheduledEvent } from "../shadcn-scheduler.types";
+import NewEventDialog from "./NewEventDialog";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,19 +20,23 @@ const formatDate = (date: Date) => {
   });
 };
 
-interface EventStyledProps extends ModalEvent {
-  minimized?: boolean;
+interface EventCardProps extends ScheduledEvent {
+  minimized: boolean;
 }
 
-export default function EventStyled({ event }: { event: EventStyledProps }) {
-  const { showModal: showEventModal } = useModalContext();
-  const { handlers } = useScheduler();
+export default function StyledEventCard({
+  scheduledEvent,
+}: {
+  scheduledEvent: EventCardProps;
+}) {
+  const { openDialog: showEventModal } = useEventDialogContext();
+  const { scheduledEventHandlers: scheduledEventHandlers } =
+    useShadcnScheduler();
 
-  // Handler function to edit event
-  function handleEditEvent(event: ModalEvent) {
+  function editScheduledEvent(event: ScheduledEvent) {
     showEventModal({
       title: event.title || "Edit Event",
-      body: <AddEventModal />,
+      body: <NewEventDialog />,
       getter: async () => {
         return { ...event };
       },
@@ -40,8 +44,8 @@ export default function EventStyled({ event }: { event: EventStyledProps }) {
   }
 
   // Handler function to delete event
-  function handleDeleteEvent(eventId: string) {
-    handlers.handleDeleteEvent(eventId);
+  function deleteScheduledEvent(eventId: string) {
+    scheduledEventHandlers.deleteScheduledEvent(eventId);
   }
 
   return (
@@ -50,7 +54,7 @@ export default function EventStyled({ event }: { event: EventStyledProps }) {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2, ease: "easeInOut" }}
-      key={event.id}
+      key={scheduledEvent.id}
       className="w-full relative cursor-pointer border border-gray-300 dark:border-gray-700 rounded-lg flex flex-col flex-grow bg-white dark:bg-gray-800 shadow-sm dark:shadow-md hover:shadow-md dark:hover:shadow-lg transition-shadow duration-200"
     >
       <Button
@@ -59,7 +63,7 @@ export default function EventStyled({ event }: { event: EventStyledProps }) {
         size="icon"
         onClick={(e) => {
           e.stopPropagation(); // Prevent triggering the edit modal
-          handleDeleteEvent(event.id);
+          deleteScheduledEvent(scheduledEvent.id);
         }}
         className="absolute top-2 right-2 p-1 rounded-full hover:bg-red-100 dark:hover:bg-red-900"
         aria-label="Delete Event"
@@ -70,43 +74,49 @@ export default function EventStyled({ event }: { event: EventStyledProps }) {
       {
         <div
           onClick={() =>
-            handleEditEvent({
-              id: event.id,
-              title: event.title,
-              startDate: event.startDate,
-              endDate: event.endDate,
-              description: event.description,
-              variant: event.variant,
+            editScheduledEvent({
+              id: scheduledEvent.id,
+              title: scheduledEvent.title,
+              startDate: scheduledEvent.startDate,
+              endDate: scheduledEvent.endDate,
+              description: scheduledEvent.description,
+              variant: scheduledEvent.variant,
             })
           }
-          className={`flex flex-col flex-grow p-4 ${event.minimized ? "h-full" : "min-h-fit"} rounded-md`}
+          className={`flex flex-col flex-grow p-4 ${
+            scheduledEvent.minimized ? "h-full" : "min-h-fit"
+          } rounded-md`}
         >
           <h1
-            className={`font-semibold text-lg ${event?.minimized ? "text-sm" : ""} truncate text-gray-900 dark:text-gray-100`}
+            className={`font-semibold text-lg ${
+              scheduledEvent?.minimized ? "text-sm" : ""
+            } truncate text-gray-900 dark:text-gray-100`}
           >
-            {event.title}
+            {scheduledEvent.title}
           </h1>
 
-          {event.description && (
+          {scheduledEvent.description && (
             <p
-              className={`text-sm text-gray-600 dark:text-gray-300 mt-1 ${event?.minimized ? "hidden" : "truncate"}`}
+              className={`text-sm text-gray-600 dark:text-gray-300 mt-1 ${
+                scheduledEvent?.minimized ? "hidden" : "truncate"
+              }`}
             >
-              {event.description}
+              {scheduledEvent.description}
             </p>
           )}
 
-          {!event.minimized && (
+          {!scheduledEvent.minimized && (
             <div className="flex justify-between items-center mt-2">
               <Badge
                 variant="secondary"
                 className="capitalize dark:bg-gray-700 dark:text-gray-200"
               >
-                {event.variant}
+                {scheduledEvent.variant}
               </Badge>
               <div className="flex space-x-1 text-xs text-gray-500 dark:text-gray-400">
-                <span>{formatDate(event.startDate)}</span>
+                <span>{formatDate(scheduledEvent.startDate)}</span>
                 <span>-</span>
-                <span>{formatDate(event.endDate)}</span>
+                <span>{formatDate(scheduledEvent.endDate)}</span>
               </div>
             </div>
           )}

@@ -1,10 +1,10 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ModalEvent } from "@/scheduler-app.types";
-import EventStyled from "../event-styled";
+import { ScheduledEvent } from "@/shadcn-scheduler.types";
+import StyledEventCard from "../StyledEventCard";
 
 interface AllDayEventsListProps {
-  events: ModalEvent[];
+  events: ScheduledEvent[];
 }
 
 const AllDayEventsList: React.FC<AllDayEventsListProps> = ({ events }) => {
@@ -19,7 +19,9 @@ const AllDayEventsList: React.FC<AllDayEventsListProps> = ({ events }) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
               >
-                <EventStyled event={{ ...event, minimized: false }} />
+                <StyledEventCard
+                  scheduledEvent={{ ...event, minimized: false }}
+                />
               </motion.div>
             ))
           : "No events for today"}

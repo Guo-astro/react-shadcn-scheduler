@@ -2,15 +2,15 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "nanoid";
 
-import { useModalContext } from "../providers/modal-provider";
-import { useScheduler } from "../providers/schedular-provider";
+import { useEventDialogContext } from "../providers/modal-provider";
+import { useShadcnScheduler } from "../providers/shadcn-scheduler-provider";
 import {
   eventSchema,
   type EventFormData,
   type Variant,
-  type ModalEvent,
-} from "../scheduler-app.types";
-import SelectDate from "../components/select-date";
+  type ScheduledEvent,
+} from "../shadcn-scheduler.types";
+import DateRangeSelector from "./DateRangeSelector";
 
 // ShadCN UI Components
 import { Button } from "@/components/ui/button";
@@ -27,23 +27,17 @@ import {
 } from "@/components/ui/select";
 import { useEffect, useState } from "react";
 
-export default function AddEventModal({
-  CustomAddEventModal,
-}: {
-  CustomAddEventModal?: React.FC<{
-    register: ReturnType<typeof useForm<EventFormData>>["register"];
-    errors: ReturnType<typeof useForm<EventFormData>>["formState"]["errors"];
-  }>;
-}) {
-  const { onClose, data } = useModalContext();
+export default function NewEventDialog() {
+  const { onClose, data } = useEventDialogContext();
 
   const [selectedColor, setSelectedColor] = useState<string>(
     getEventColor(data?.variant || "primary")
   );
 
-  const typedData = data as ModalEvent;
+  const typedData = data as ScheduledEvent;
 
-  const { handlers } = useScheduler();
+  const { scheduledEventHandlers: scheduledEventHandlers } =
+    useShadcnScheduler();
 
   const {
     register,
@@ -115,7 +109,7 @@ export default function AddEventModal({
   }
 
   const onSubmit: SubmitHandler<EventFormData> = (formData) => {
-    const newEvent: ModalEvent = {
+    const newEvent: ScheduledEvent = {
       id: nanoid(),
       title: formData.title,
       startDate: formData.startDate,
@@ -125,18 +119,16 @@ export default function AddEventModal({
     };
 
     if (!typedData?.id) {
-      handlers.handleAddEvent(newEvent);
+      scheduledEventHandlers.addScheduledEvent(newEvent);
     } else {
-      handlers.handleUpdateEvent(newEvent, typedData.id);
+      scheduledEventHandlers.updateScheduledEvent(newEvent, typedData.id);
     }
     onClose(); // Close the modal after submission
   };
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      {CustomAddEventModal ? (
-        <CustomAddEventModal register={register} errors={errors} />
-      ) : (
+      {
         <>
           <Input
             {...register("title")}
@@ -158,7 +150,7 @@ export default function AddEventModal({
             </span>
           )}
 
-          <SelectDate data={data} setValue={setValue} />
+          <DateRangeSelector data={data} setValue={setValue} />
 
           <Select
             value={selectedColor}
@@ -199,7 +191,7 @@ export default function AddEventModal({
             </Button>
           </div>
         </>
-      )}
+      }
     </form>
   );
 }

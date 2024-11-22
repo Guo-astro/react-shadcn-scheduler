@@ -1,14 +1,14 @@
 // hooks/useCalendar.ts
 import { useState } from "react";
-import type { ModalEvent } from "../scheduler-app.types";
-import { useModalContext } from "../providers/modal-provider";
-import { useScheduler } from "../providers/schedular-provider";
-import AddEventModal from "../modals/add-event-modal";
-import ShowMoreEventsModal from "../components/show-more-events-modal";
+import type { ScheduledEvent } from "../shadcn-scheduler.types";
+import { useEventDialogContext } from "../providers/modal-provider";
+import { useShadcnScheduler } from "../providers/shadcn-scheduler-provider";
+import NewEventDialog from "../components/NewEventDialog";
+import MoreEventsDialog from "../components/show-more-events-modal";
 
-export const useCalendar = () => {
-  const { getters } = useScheduler();
-  const { showModal } = useModalContext();
+export const useMonthlyNavigator = () => {
+  const { eventDateUtilities: eventDateUtilities } = useShadcnScheduler();
+  const { openDialog: openDialog } = useEventDialogContext();
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const handlePrevMonth = () => {
@@ -30,9 +30,9 @@ export const useCalendar = () => {
   };
 
   const handleAddEvent = (selectedDay: number) => {
-    showModal({
+    openDialog({
       title: "Add Event",
-      body: <AddEventModal />,
+      body: <NewEventDialog />,
       getter: async () => {
         const startDate = new Date(
           currentDate.getFullYear(),
@@ -57,15 +57,15 @@ export const useCalendar = () => {
     });
   };
 
-  const handleShowMoreEvents = (dayEvents: ModalEvent[]) => {
-    showModal({
+  const handleShowMoreEvents = (dayEvents: ScheduledEvent[]) => {
+    openDialog({
       title: dayEvents[0]?.startDate.toDateString(),
-      body: <ShowMoreEventsModal />,
+      body: <MoreEventsDialog />,
       getter: async () => ({ dayEvents }),
     });
   };
 
-  const daysInMonth = getters.getDaysInMonth(
+  const daysInMonth = eventDateUtilities.calculateDaysInMonth(
     currentDate.getMonth(),
     currentDate.getFullYear()
   );

@@ -4,10 +4,10 @@ import React from "react";
 import Header from "./Header";
 import DaysOfWeek from "./DaysOfWeek";
 import CalendarGrid from "./CalendarGrid";
-import { useCalendar } from "@/hooks/useCalendar";
-import { useScheduler } from "@/providers/schedular-provider";
+import { useMonthlyNavigator as useMonthlyScheduler } from "@/hooks/useMonthlyNavigator";
+import { useShadcnScheduler } from "@/providers/shadcn-scheduler-provider";
 import { getDaysOfWeek, getStartOffset } from "@/utils/dateUtils";
-import { useModalHandlers } from "@/hooks/useModalHandlers";
+import { useEventDialogHandlers } from "@/hooks/useEventDialogHandlers";
 
 interface MonthViewProps {
   prevButton?: React.ReactNode;
@@ -21,15 +21,13 @@ const MonthView: React.FC<MonthViewProps> = ({
   classNames,
 }) => {
   const { currentDate, handlePrevMonth, handleNextMonth, daysInMonth } =
-    useCalendar();
+    useMonthlyScheduler();
 
-  const {
-    handleAddEvent: modalAddEvent,
-    handleShowMoreEvents: modalShowMoreEvents,
-  } = useModalHandlers(currentDate);
+  const { handleAddEvent, handleShowMoreEvents: modalShowMoreEvents } =
+    useEventDialogHandlers(currentDate);
 
-  const weekStartsOn = useScheduler().weekStartsOn; // Assuming useScheduler provides this
-  const getters = useScheduler().getters; // Assuming useScheduler provides getters
+  const weekStartsOn = useShadcnScheduler().weekStartsOn; // Assuming useScheduler provides this
+  const eventDateUtilities = useShadcnScheduler().eventDateUtilities; // Assuming useScheduler provides eventDateUtilities
 
   const daysOfWeek = getDaysOfWeek(weekStartsOn);
   const startOffset = getStartOffset(currentDate, weekStartsOn);
@@ -68,9 +66,11 @@ const MonthView: React.FC<MonthViewProps> = ({
         lastDateOfPrevMonth={lastDateOfPrevMonth}
         weekStartsOn={weekStartsOn}
         currentDate={currentDate}
-        handleAddEvent={(day) => modalAddEvent(currentDate, day)}
+        handleAddEvent={(day) =>
+          handleAddEvent(day, currentDate.getDate().toString())
+        }
         handleShowMoreEvents={modalShowMoreEvents}
-        getters={getters}
+        eventDateUtilities={eventDateUtilities}
       />
     </div>
   );

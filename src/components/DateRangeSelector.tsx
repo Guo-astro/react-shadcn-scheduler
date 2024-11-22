@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -14,20 +12,12 @@ import { Input } from "@/components/ui/input";
 
 import { useEffect, useState } from "react";
 import { type UseFormSetValue } from "react-hook-form";
-import type { EventFormData } from "../scheduler-app.types";
+import type { EventFormData } from "../shadcn-scheduler.types";
 import { CalendarIcon } from "lucide-react";
+import { getFormattedDate } from "@/utils/dateUtils";
 
 /**
- * Utility function to format Date objects into "MMM dd, yyyy" format.
- * @param {Date} date - The date to format.
- * @returns {string} - Formatted date string.
- */
-function getFormattedDate(date: Date): string {
-  return format(date, "LLL dd, yyyy");
-}
-
-/**
- * SelectDate Component
+ * DateRangeSelector Component
  *
  * A component that allows users to select a date range and specify start and end times.
  * Utilizes ShadCN's Popover, Calendar, Button, and Input components.
@@ -37,9 +27,9 @@ function getFormattedDate(date: Date): string {
  * @param {Object} props - Component props.
  * @param {Object} props.data - Optional initial data for startDate, endDate, and time.
  * @param {UseFormSetValue<EventFormData>} props.setValue - react-hook-form's setValue function.
- * @returns {JSX.Element} - The rendered SelectDate component.
+ * @returns {JSX.Element} - The rendered DateRangeSelector component.
  */
-export default function SelectDate({
+export default function DateRangeSelector({
   data,
   setValue,
 }: {

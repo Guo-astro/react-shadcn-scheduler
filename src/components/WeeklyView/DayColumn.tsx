@@ -1,6 +1,6 @@
 import React from "react";
 import { AnimatePresence } from "framer-motion";
-import EventStyled from "../event-styled";
+import StyledEventCard from "../StyledEventCard";
 
 interface Event {
   id: string;
@@ -65,8 +65,8 @@ const DayColumn: React.FC<DayColumnProps> = ({
               }}
               className="z-50"
             >
-              <EventStyled
-                event={{
+              <StyledEventCard
+                scheduledEvent={{
                   ...event,
                   minimized: true,
                 }}

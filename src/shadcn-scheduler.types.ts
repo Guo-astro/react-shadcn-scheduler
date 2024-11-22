@@ -10,10 +10,7 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-// SchedulerTypes.ts
-
-// Define event type
-export interface ModalEvent {
+export interface ScheduledEvent {
   id: string;
   title: string;
   description?: string | undefined;
@@ -22,23 +19,21 @@ export interface ModalEvent {
   variant: "primary" | "warning" | "danger" | "success";
 }
 
-// Define the state interface for the scheduler
-export interface SchedulerState {
-  events: ModalEvent[];
+export interface ScheduledEvents {
+  events: ScheduledEvent[];
 }
 
-// Define actions for reducer
-export type Action =
-  | { type: "ADD_EVENT"; payload: ModalEvent }
+export type EventActions =
+  | { type: "ADD_EVENT"; payload: ScheduledEvent }
   | { type: "REMOVE_EVENT"; payload: { id: string } }
-  | { type: "UPDATE_EVENT"; payload: ModalEvent }
-  | { type: "SET_EVENTS"; payload: ModalEvent[] };
+  | { type: "UPDATE_EVENT"; payload: ScheduledEvent }
+  | { type: "SET_EVENTS"; payload: ScheduledEvent[] };
 
-// Define handlers interface
-export interface Handlers {
-  handleEventStyling: (
-    event: ModalEvent,
-    dayEvents: ModalEvent[]
+// Define scheduledEventHandlers interface
+export interface SchedulerEventHandlers {
+  styleScheduledEvent: (
+    event: ScheduledEvent,
+    dayEvents: ScheduledEvent[]
   ) => {
     height: string;
     left: string;
@@ -47,30 +42,32 @@ export interface Handlers {
     top: string;
     zIndex: number;
   };
-  handleAddEvent: (event: ModalEvent) => void;
-  handleUpdateEvent: (event: ModalEvent, id: string) => void;
-  handleDeleteEvent: (id: string) => void;
+  addScheduledEvent: (event: ScheduledEvent) => void;
+  updateScheduledEvent: (event: ScheduledEvent, id: string) => void;
+  deleteScheduledEvent: (id: string) => void;
 }
 
-// Define getters interface
-export interface Getters {
-  getDaysInMonth: (
+export interface EventDateUtilities {
+  calculateDaysInMonth: (
     month: number,
     year: number
-  ) => { day: number; events: ModalEvent[] }[];
-  getEventsForDay: (day: number, currentDate: Date) => ModalEvent[];
-  getDaysInWeek: (week: number, year: number) => Date[];
-  getWeekNumber: (date: Date) => number;
+  ) => { day: number; events: ScheduledEvent[] }[];
+  getEventsForDay: (day: number, currentDate: Date) => ScheduledEvent[];
+  calculateDaysInWeek: (
+    weekStartsOn: string,
+    week: number,
+    year: number
+  ) => Date[];
+  calculateWeekNumber: (date: Date) => number;
   getDayName: (day: number) => string;
-  getEventsForWeek: (currentDate: Date) => Record<number, ModalEvent[]>;
+  getEventsForWeek: (currentDate: Date) => Record<number, ScheduledEvent[]>;
 }
 
-// Define the context value interface
-export interface SchedulerContextType {
-  events: SchedulerState;
-  dispatch: Dispatch<Action>;
-  getters: Getters;
-  handlers: Handlers;
+export interface ShadcnSchedulerEventContext {
+  scheduledEvents: ScheduledEvents;
+  dispatch: Dispatch<EventActions>;
+  eventDateUtilities: EventDateUtilities;
+  scheduledEventHandlers: SchedulerEventHandlers;
   weekStartsOn: startOfWeek;
 }
 
@@ -85,19 +82,18 @@ export const variants = [
 
 export type Variant = (typeof variants)[number];
 
-// Define Zod schema for form validation
 export const eventSchema = z.object({
-  title: z.string().nonempty("Event name is required"),
+  title: z.string().min(1).default("Event name is required"),
   description: z.string().optional(),
   startDate: z.date(),
   endDate: z.date(),
   variant: z.enum(["primary", "danger", "success", "warning", "default"]),
-  color: z.string().nonempty("Color selection is required"),
+  color: z.string().min(1).default("Color selection is required"),
 });
 
 export type EventFormData = z.infer<typeof eventSchema>;
 
-export type ScheduleViews = {
+export type AvailableScheduleViews = {
   mobileViews?: string[];
   views?: string[];
 };
@@ -112,22 +108,6 @@ export interface CustomEventModal {
       errors: Record<string, string>;
     }>;
   };
-}
-
-export interface CustomComponents {
-  customButtons?: {
-    CustomAddEventButton?: React.ReactNode;
-    CustomPrevButton?: React.ReactNode;
-    CustomNextButton?: React.ReactNode;
-  };
-
-  customTabs?: {
-    CustomDayTab?: React.ReactNode;
-    CustomWeekTab?: React.ReactNode;
-    CustomMonthTab?: React.ReactNode;
-  };
-  CustomEventComponent?: React.FC<ModalEvent>; // Using custom event type
-  CustomEventModal?: CustomEventModal;
 }
 
 export interface ButtonClassNames {

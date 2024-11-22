@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import AddEventModal from "@/modals/add-event-modal";
-import { useModalContext } from "@/providers/modal-provider";
-import { useScheduler } from "@/providers/schedular-provider";
-import { ModalEvent } from "@/scheduler-app.types";
+import NewEventDialog from "@/components/NewEventDialog";
+import { useEventDialogContext } from "@/providers/modal-provider";
+import { useShadcnScheduler } from "@/providers/shadcn-scheduler-provider";
+import { ScheduledEvent } from "@/shadcn-scheduler.types";
 import AllDayEventsList from "./AllDayEventsList";
 import DateTitle from "./DateTitle";
 import EventsOverlay from "./EventsOverlay";
@@ -24,22 +24,28 @@ export default function DailyView({
 }: {
   prevButton?: React.ReactNode;
   nextButton?: React.ReactNode;
-  CustomEventComponent?: React.FC<ModalEvent>;
+  CustomEventComponent?: React.FC<ScheduledEvent>;
   classNames?: { prev?: string; next?: string; addEvent?: string };
 }) {
   const hoursColumnRef = useRef<HTMLDivElement>(null);
   const [detailedHour, setDetailedHour] = useState<string | null>(null);
   const [timelinePosition, setTimelinePosition] = useState<number>(0);
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const { showModal } = useModalContext();
-  const { getters, handlers } = useScheduler();
+  const { openDialog: showModal } = useEventDialogContext();
+  const {
+    eventDateUtilities: eventDateUtilities,
+    scheduledEventHandlers: scheduledEventHandlers,
+  } = useShadcnScheduler();
 
-  const dayEvents = getters.getEventsForDay(currentDate.getDate(), currentDate);
+  const dayEvents = eventDateUtilities.getEventsForDay(
+    currentDate.getDate(),
+    currentDate
+  );
 
-  function handleAddEvent(event?: Omit<ModalEvent, "id">) {
+  function handleAddEvent(event?: Omit<ScheduledEvent, "id">) {
     showModal({
       title: "Add Event",
-      body: <AddEventModal />,
+      body: <NewEventDialog />,
       getter: async () => {
         const startDate = event?.startDate || new Date();
         const endDate = event?.endDate || new Date();
@@ -149,7 +155,10 @@ export default function DailyView({
               ))}
 
               {/* Display Events */}
-              <EventsOverlay events={dayEvents} handlers={handlers} />
+              <EventsOverlay
+                events={dayEvents}
+                scheduledEventHandlers={scheduledEventHandlers}
+              />
             </div>
           </motion.div>
 

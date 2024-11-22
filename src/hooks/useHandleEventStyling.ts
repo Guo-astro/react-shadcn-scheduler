@@ -1,12 +1,16 @@
 // hooks/useHandleEventStyling.ts
-import { ModalEvent } from "@/scheduler-app.types";
-import { useScheduler } from "../providers/schedular-provider";
+import { ScheduledEvent } from "@/shadcn-scheduler.types";
+import { useShadcnScheduler } from "../providers/shadcn-scheduler-provider";
 
 export const useHandleEventStyling = () => {
-  const { handlers } = useScheduler();
+  const { scheduledEventHandlers: scheduledEventHandlers } =
+    useShadcnScheduler();
 
-  const handleEventStyling = (event: ModalEvent, dayEvents: ModalEvent[]) => {
-    return handlers.handleEventStyling(event, dayEvents);
+  const handleEventStyling = (
+    event: ScheduledEvent,
+    dayEvents: ScheduledEvent[]
+  ) => {
+    return scheduledEventHandlers.styleScheduledEvent(event, dayEvents);
   };
 
   return { handleEventStyling };

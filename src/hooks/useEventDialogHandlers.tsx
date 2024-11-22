@@ -1,11 +1,11 @@
 // hooks/useModalHandlers.tsx
-import { useModalContext } from "../providers/modal-provider";
-import AddEventModal from "../modals/add-event-modal";
-import type { ModalEvent } from "../scheduler-app.types";
+import { useEventDialogContext } from "../providers/modal-provider";
+import NewEventDialog from "../components/NewEventDialog";
+import type { ScheduledEvent } from "../shadcn-scheduler.types";
 import ShowMoreEventsModal from "../components/WeeklyView/ShowMoreEventsModal";
 
-export const useModalHandlers = (currentDate: Date) => {
-  const { showModal } = useModalContext();
+export const useEventDialogHandlers = (currentDate: Date) => {
+  const { openDialog } = useEventDialogContext();
 
   const handleAddEvent = (day: number, detailedHour: string) => {
     const [hours, minutes] = detailedHour.split(":").map(Number);
@@ -17,9 +17,9 @@ export const useModalHandlers = (currentDate: Date) => {
       minutes
     );
 
-    showModal({
+    openDialog({
       title: "Add Event",
-      body: <AddEventModal />,
+      body: <NewEventDialog />,
       getter: async () => {
         const startDate = date;
         const endDate = new Date(date.getTime() + 60 * 60 * 1000); // 1-hour duration
@@ -28,10 +28,10 @@ export const useModalHandlers = (currentDate: Date) => {
     });
   };
 
-  const handleShowMoreEvents = (dayEvents: ModalEvent[]) => {
-    showModal({
+  const handleShowMoreEvents = (dayEvents: ScheduledEvent[]) => {
+    openDialog({
       title: "More Events",
-      body: <ShowMoreEventsModal events={dayEvents} />,
+      body: <ShowMoreEventsModal scheduledEvents={dayEvents} />,
       getter: async () => ({ dayEvents }),
     });
   };

@@ -1,20 +1,26 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Handlers, ModalEvent } from "@/scheduler-app.types";
-import EventStyled from "../event-styled";
+import {
+  SchedulerEventHandlers,
+  ScheduledEvent,
+} from "@/shadcn-scheduler.types";
+import StyledEventCard from "../StyledEventCard";
 
 interface EventsOverlayProps {
-  events: ModalEvent[];
-  handlers: Handlers;
+  events: ScheduledEvent[];
+  scheduledEventHandlers: SchedulerEventHandlers;
 }
 
-const EventsOverlay: React.FC<EventsOverlayProps> = ({ events, handlers }) => {
+const EventsOverlay: React.FC<EventsOverlayProps> = ({
+  events,
+  scheduledEventHandlers,
+}) => {
   return (
     <AnimatePresence mode="wait">
       {events.length > 0
         ? events.map((event, eventIndex) => {
             const { height, left, maxWidth, minWidth, top, zIndex } =
-              handlers.handleEventStyling(event, events);
+              scheduledEventHandlers.styleScheduledEvent(event, events);
             return (
               <motion.div
                 key={`overlay-event-${event.id}-${eventIndex}`}
@@ -31,7 +37,9 @@ const EventsOverlay: React.FC<EventsOverlayProps> = ({ events, handlers }) => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
               >
-                <EventStyled event={{ ...event, minimized: true }} />
+                <StyledEventCard
+                  scheduledEvent={{ ...event, minimized: true }}
+                />
               </motion.div>
             );
           })

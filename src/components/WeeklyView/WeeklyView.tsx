@@ -1,14 +1,14 @@
 import React, { useRef, useState } from "react";
-import { useScheduler } from "@/providers/schedular-provider";
-import { useModalContext } from "@/providers/modal-provider";
+import { useShadcnScheduler } from "@/providers/shadcn-scheduler-provider";
+import { useEventDialogContext } from "@/providers/modal-provider";
 import BadgeList from "./BadgeList";
 import NavigationButtons from "./NavigationButtons";
 import WeekHeader from "./WeekHeader";
 import WeekGrid from "./WeekGrid";
 import HourColumn from "./HourColumn";
 import TimelineIndicator from "./TimelineIndicator";
-import AddEventModal from "@/modals/add-event-modal";
-import { ModalEvent } from "@/scheduler-app.types";
+import NewEventDialog from "@/components/NewEventDialog";
+import { ScheduledEvent } from "@/shadcn-scheduler.types";
 import DayHeader from "./DaysHeader";
 
 const hours = Array.from(
@@ -70,15 +70,20 @@ const WeeklyView: React.FC<{
   nextButton?: React.ReactNode;
   classNames?: { prev?: string; next?: string; addEvent?: string };
 }> = ({ prevButton, nextButton, classNames }) => {
-  const { getters, handlers } = useScheduler();
+  const {
+    eventDateUtilities: eventDateUtilities,
+    scheduledEventHandlers: scheduledEventHandlers,
+    weekStartsOn,
+  } = useShadcnScheduler();
   const gridRef = useRef<HTMLDivElement>(null);
   const [detailedHour, setDetailedHour] = useState<string | null>(null);
   const [timelinePosition, setTimelinePosition] = useState<number>(0);
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const { showModal } = useModalContext();
+  const { openDialog: openDialog } = useEventDialogContext();
 
-  const daysOfWeek = getters?.getDaysInWeek(
-    getters?.getWeekNumber(currentDate),
+  const daysOfWeek = eventDateUtilities.calculateDaysInWeek(
+    weekStartsOn,
+    eventDateUtilities.calculateWeekNumber(currentDate),
     currentDate.getFullYear()
   );
 
@@ -87,8 +92,11 @@ const WeeklyView: React.FC<{
   }
 
   const dayEvents = daysOfWeek.reduce(
-    (acc: Record<number, ModalEvent[]>, day, idx) => {
-      const events = getters.getEventsForDay(day.getDate(), currentDate);
+    (acc: Record<number, ScheduledEvent[]>, day, idx) => {
+      const events = eventDateUtilities.getEventsForDay(
+        day.getDate(),
+        currentDate
+      );
       acc[idx] = events;
       return acc;
     },
@@ -116,10 +124,10 @@ const WeeklyView: React.FC<{
     setTimelinePosition(0);
   };
 
-  function handleAddEvent(event?: ModalEvent) {
-    showModal({
+  function handleAddEvent(event?: ScheduledEvent) {
+    openDialog({
       title: "Add Event",
-      body: <AddEventModal />,
+      body: <NewEventDialog />,
       getter: async () => {
         const startDate = event?.startDate || new Date();
         const endDate = event?.endDate || new Date();
@@ -198,7 +206,7 @@ const WeeklyView: React.FC<{
         {daysOfWeek.map((day, idx) => (
           <DayHeader
             key={idx}
-            dayName={getters.getDayName(day.getDay())}
+            dayName={eventDateUtilities.getDayName(day.getDay())}
             date={day.getDate()}
             isToday={new Date().toDateString() === day.toDateString()}
             className="col-span-1"
@@ -220,7 +228,7 @@ const WeeklyView: React.FC<{
         <WeekGrid
           daysOfWeek={daysOfWeek}
           dayEvents={dayEvents}
-          handleEventStyling={handlers.handleEventStyling}
+          handleEventStyling={scheduledEventHandlers.styleScheduledEvent}
           handleAddEventWeek={handleAddEventWeek}
           badgeColorClasses={badgeColorClasses}
           className="col-span-7"

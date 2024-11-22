@@ -4,15 +4,15 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import clsx from "clsx";
 import { AnimatePresence, motion } from "framer-motion";
-import type { ModalEvent } from "../../scheduler-app.types";
-import EventStyled from "../event-styled";
+import type { ScheduledEvent } from "../../shadcn-scheduler.types";
+import StyledEventCard from "../StyledEventCard";
 
 interface CalendarDayProps {
   day: number;
   isToday: boolean;
-  dayEvents: ModalEvent[];
+  dayEvents: ScheduledEvent[];
   onAddEvent: (day: number, detailedHour: string) => void;
-  onShowMoreEvents: (events: ModalEvent[]) => void;
+  onShowMoreEvents: (events: ScheduledEvent[]) => void;
 }
 
 const CalendarDay: React.FC<CalendarDayProps> = ({
@@ -50,8 +50,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
         <div className="flex-grow flex flex-col gap-2 overflow-hidden">
           <AnimatePresence mode="wait">
             {dayEvents.length > 0 && (
-              <EventStyled
-                event={{
+              <StyledEventCard
+                scheduledEvent={{
                   ...dayEvents[0],
                   minimized: true,
                 }}

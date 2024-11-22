@@ -1,19 +1,22 @@
 // components/WeeklyView/ShowMoreEventsModal.tsx
-import { ModalEvent } from "@/scheduler-app.types";
+import { ScheduledEvent } from "@/shadcn-scheduler.types";
 import React from "react";
-import EventStyled from "../event-styled";
+import StyledEventCard from "../StyledEventCard";
 
 interface ShowMoreEventsModalProps {
-  events: ModalEvent[];
+  scheduledEvents: ScheduledEvent[];
 }
 
 const ShowMoreEventsModal: React.FC<ShowMoreEventsModalProps> = ({
-  events,
+  scheduledEvents,
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      {events.map((event: ModalEvent) => (
-        <EventStyled key={event.id} event={event} />
+      {scheduledEvents.map((scheduledEvent: ScheduledEvent) => (
+        <StyledEventCard
+          key={scheduledEvent.id}
+          scheduledEvent={{ ...scheduledEvent, minimized: false }}
+        />
       ))}
     </div>
   );

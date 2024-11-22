@@ -2,7 +2,7 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import CalendarDay from "./CalendarDay";
-import { ModalEvent } from "@/scheduler-app.types";
+import { ScheduledEvent } from "@/shadcn-scheduler.types";
 
 interface CalendarGridProps {
   daysInMonth: { day: number }[];
@@ -11,9 +11,9 @@ interface CalendarGridProps {
   weekStartsOn: "monday" | "sunday";
   currentDate: Date;
   handleAddEvent: (day: number) => void;
-  handleShowMoreEvents: (events: ModalEvent[]) => void;
-  getters: {
-    getEventsForDay: (day: number, date: Date) => ModalEvent[];
+  handleShowMoreEvents: (events: ScheduledEvent[]) => void;
+  eventDateUtilities: {
+    getEventsForDay: (day: number, date: Date) => ScheduledEvent[];
   }; // Replace with actual type from useScheduler
 }
 
@@ -24,7 +24,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
   currentDate,
   handleAddEvent,
   handleShowMoreEvents,
-  getters,
+  eventDateUtilities,
 }) => {
   // Determine if today is in the current month
   const today = new Date();
@@ -53,7 +53,10 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 
         {/* Current month's days */}
         {daysInMonth.map((dayObj) => {
-          const dayEvents = getters.getEventsForDay(dayObj.day, currentDate);
+          const dayEvents = eventDateUtilities.getEventsForDay(
+            dayObj.day,
+            currentDate
+          );
 
           // Determine if the day is today
           const isToday =
