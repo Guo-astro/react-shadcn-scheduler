@@ -1,10 +1,10 @@
 // hooks/useCalendar.ts
 import { useState } from "react";
 import type { ScheduledEvent } from "../shadcn-scheduler.types";
-import { useEventDialogContext } from "../providers/modal-provider";
-import { useShadcnScheduler } from "../providers/shadcn-scheduler-provider";
+import { useEventDialogContext } from "../providers/EventDialogProvider";
+import { useShadcnScheduler } from "../providers/ShadcnSchedulerProvider";
 import NewEventDialog from "../components/NewEventDialog";
-import MoreEventsDialog from "../components/show-more-events-modal";
+import MoreEventsDialog from "@/components/MoreEventsDialog";
 
 export const useMonthlyNavigator = () => {
   const { eventDateUtilities: eventDateUtilities } = useShadcnScheduler();

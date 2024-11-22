@@ -1,6 +1,6 @@
 // hooks/useHandleEventStyling.ts
 import { ScheduledEvent } from "@/shadcn-scheduler.types";
-import { useShadcnScheduler } from "../providers/shadcn-scheduler-provider";
+import { useShadcnScheduler } from "../providers/ShadcnSchedulerProvider";
 
 export const useHandleEventStyling = () => {
   const { scheduledEventHandlers: scheduledEventHandlers } =

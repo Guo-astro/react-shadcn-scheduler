@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import { useShadcnScheduler } from "@/providers/shadcn-scheduler-provider";
-import { useEventDialogContext } from "@/providers/modal-provider";
+import { useShadcnScheduler } from "@/providers/ShadcnSchedulerProvider";
+import { useEventDialogContext } from "@/providers/EventDialogProvider";
 import BadgeList from "./BadgeList";
 import NavigationButtons from "./NavigationButtons";
 import WeekHeader from "./WeekHeader";
@@ -197,7 +197,7 @@ const WeeklyView: React.FC<{
       {/* Header Grid */}
       <div className="grid grid-cols-8">
         {/* Week Header */}
-        <WeekHeader className="col-span-1" />
+        <WeekHeader className="col-span-1" weekNumber={0} />
 
         {/* Empty placeholder for Hour Column alignment */}
         <div className="col-span-1"></div>

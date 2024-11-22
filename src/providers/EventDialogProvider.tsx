@@ -29,7 +29,7 @@ const EventDialogContext = createContext<EventDialogContextType | undefined>(
   undefined
 );
 
-export const DialogContextProvider: React.FC<{ children: ReactNode }> = ({
+export const EventDialogProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [dialogDetails, setDialogDetails] = useState<{

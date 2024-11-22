@@ -2,7 +2,7 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import DailyView from "./DailyView";
 import { ScheduledEvent } from "../../shadcn-scheduler.types";
-import { ShadcnSchedulerProvider } from "@/providers/shadcn-scheduler-provider";
+import { ShadcnSchedulerProvider } from "@/providers/ShadcnSchedulerProvider";
 
 // Mock scheduledEventHandlers
 const mockHandlers = {

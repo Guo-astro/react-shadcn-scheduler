@@ -1,4 +1,4 @@
-import { useEventDialogContext } from "../providers/modal-provider";
+import { useEventDialogContext } from "../providers/EventDialogProvider";
 import StyledEventCard from "./StyledEventCard";
 import type { ScheduledEvent } from "../shadcn-scheduler.types";
 

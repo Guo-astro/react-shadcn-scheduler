@@ -1,7 +1,7 @@
 import { TrashIcon } from "lucide-react";
 import { motion } from "framer-motion";
-import { useEventDialogContext } from "../providers/modal-provider";
-import { useShadcnScheduler } from "../providers/shadcn-scheduler-provider";
+import { useEventDialogContext } from "../providers/EventDialogProvider";
+import { useShadcnScheduler } from "../providers/ShadcnSchedulerProvider";
 import { type ScheduledEvent } from "../shadcn-scheduler.types";
 import NewEventDialog from "./NewEventDialog";
 

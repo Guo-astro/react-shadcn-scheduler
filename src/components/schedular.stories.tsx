@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ReactShadcnScheduler } from "./main";
 import "../../src/index.css"; // replace with the name of your tailwind css file
+import { ShadcnEventScheduler } from "./ShadcnEventScheduler";
 
 const meta = {
   title: "Example/ReactShadcnScheduler",
-  component: ReactShadcnScheduler,
+  component: ShadcnEventScheduler,
   tags: ["docsPage"],
   argTypes: {
     title: {
@@ -14,7 +14,7 @@ const meta = {
       control: { type: "text" },
     },
   },
-} satisfies Meta<typeof ReactShadcnScheduler>;
+} satisfies Meta<typeof ShadcnEventScheduler>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -7,7 +7,7 @@ import {
   type ReactNode,
   useEffect,
 } from "react";
-import { DialogContextProvider } from "./modal-provider";
+import { EventDialogProvider } from "./EventDialogProvider";
 import type {
   EventActions,
   ScheduledEvent,
@@ -20,7 +20,7 @@ import {
   calculateDaysInMonth,
   calculateDaysInWeek,
   calculateWeekNumber,
-} from "@/utils/dateUtils";
+} from "@/utils/DateUtils";
 
 // Define the available variants for scheduler events
 export const variants = [
@@ -293,7 +293,7 @@ export const ShadcnSchedulerProvider = ({
         weekStartsOn,
       }}
     >
-      <DialogContextProvider>{children}</DialogContextProvider>
+      <EventDialogProvider>{children}</EventDialogProvider>
     </ShadcnSchedulerContext.Provider>
   );
 };

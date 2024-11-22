@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import NewEventDialog from "@/components/NewEventDialog";
-import { useEventDialogContext } from "@/providers/modal-provider";
-import { useShadcnScheduler } from "@/providers/shadcn-scheduler-provider";
+import { useEventDialogContext } from "@/providers/EventDialogProvider";
+import { useShadcnScheduler } from "@/providers/ShadcnSchedulerProvider";
 import { ScheduledEvent } from "@/shadcn-scheduler.types";
 import AllDayEventsList from "./AllDayEventsList";
 import DateTitle from "./DateTitle";
@@ -31,7 +31,7 @@ export default function DailyView({
   const [detailedHour, setDetailedHour] = useState<string | null>(null);
   const [timelinePosition, setTimelinePosition] = useState<number>(0);
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  const { openDialog: showModal } = useEventDialogContext();
+  const { openDialog: openDialog } = useEventDialogContext();
   const {
     eventDateUtilities: eventDateUtilities,
     scheduledEventHandlers: scheduledEventHandlers,
@@ -43,7 +43,7 @@ export default function DailyView({
   );
 
   function handleAddEvent(event?: Omit<ScheduledEvent, "id">) {
-    showModal({
+    openDialog({
       title: "Add Event",
       body: <NewEventDialog />,
       getter: async () => {
@@ -121,8 +121,6 @@ export default function DailyView({
         <NavigationButtons
           onPrev={handlePrevDay}
           onNext={handleNextDay}
-          prevButton={prevButton}
-          nextButton={nextButton}
           classNames={classNames}
         />
       </div>

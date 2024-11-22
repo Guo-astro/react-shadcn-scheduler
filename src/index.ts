@@ -1,1 +1,1 @@
-export { ReactShadcnScheduler } from "@/components/main";
+export { ShadcnEventScheduler } from "@/components/ShadcnEventScheduler";

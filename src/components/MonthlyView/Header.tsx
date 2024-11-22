@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ReactNode } from "react";
 import { motion } from "framer-motion";
-import { formatMonthYear } from "@/utils/dateUtils";
+import { formatMonthYear } from "@/utils/DateUtils";
 
 interface HeaderProps {
   currentDate: Date;

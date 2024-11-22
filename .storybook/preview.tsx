@@ -1,8 +1,7 @@
 import type { Preview } from "@storybook/react";
-
+import { ShadcnSchedulerProvider } from "../src/providers/ShadcnSchedulerProvider";
 import "../src/index.css";
 import React from "react";
-import { SchedulerProvider } from "../src/providers/schedular-provider";
 const preview: Preview = {
   parameters: {
     controls: {
@@ -18,9 +17,9 @@ const preview: Preview = {
       const { weekStartsOn = "monday" } = parameters;
 
       return (
-        <SchedulerProvider weekStartsOn={weekStartsOn}>
+        <ShadcnSchedulerProvider weekStartsOn={weekStartsOn}>
           <Story />
-        </SchedulerProvider>
+        </ShadcnSchedulerProvider>
       );
     },
   ],

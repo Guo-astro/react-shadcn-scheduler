@@ -5,8 +5,8 @@ import Header from "./Header";
 import DaysOfWeek from "./DaysOfWeek";
 import CalendarGrid from "./CalendarGrid";
 import { useMonthlyNavigator as useMonthlyScheduler } from "@/hooks/useMonthlyNavigator";
-import { useShadcnScheduler } from "@/providers/shadcn-scheduler-provider";
-import { getDaysOfWeek, getStartOffset } from "@/utils/dateUtils";
+import { useShadcnScheduler } from "@/providers/ShadcnSchedulerProvider";
+import { getDaysOfWeek, getStartOffset } from "@/utils/DateUtils";
 import { useEventDialogHandlers } from "@/hooks/useEventDialogHandlers";
 
 interface MonthViewProps {

@@ -5,7 +5,7 @@ import type {
   ClassNames,
   AvailableScheduleViews as ScheduleViewOptions,
 } from "../shadcn-scheduler.types";
-import { useEventDialogContext } from "../providers/modal-provider";
+import { useEventDialogContext } from "../providers/EventDialogProvider";
 import NewEventDialog from "./NewEventDialog";
 
 import { Button } from "@/components/ui/button";

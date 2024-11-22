@@ -24,6 +24,7 @@ export const PrimaryEvent: Story = {
       startDate: new Date(),
       endDate: new Date(),
       variant: "primary",
+      minimized: false,
     },
   },
 };
@@ -36,6 +37,7 @@ export const SecondaryEvent: Story = {
       startDate: new Date(),
       endDate: new Date(),
       variant: "success",
+      minimized: false,
     },
   },
 };

@@ -1,5 +1,5 @@
 // hooks/useModalHandlers.tsx
-import { useEventDialogContext } from "../providers/modal-provider";
+import { useEventDialogContext } from "../providers/EventDialogProvider";
 import NewEventDialog from "../components/NewEventDialog";
 import type { ScheduledEvent } from "../shadcn-scheduler.types";
 import ShowMoreEventsModal from "../components/WeeklyView/ShowMoreEventsModal";

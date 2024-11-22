@@ -2,8 +2,8 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { nanoid } from "nanoid";
 
-import { useEventDialogContext } from "../providers/modal-provider";
-import { useShadcnScheduler } from "../providers/shadcn-scheduler-provider";
+import { useEventDialogContext } from "../providers/EventDialogProvider";
+import { useShadcnScheduler } from "../providers/ShadcnSchedulerProvider";
 import {
   eventSchema,
   type EventFormData,

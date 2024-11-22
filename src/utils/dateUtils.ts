@@ -51,7 +51,6 @@ export const calculateDaysInWeek = (
 ) => {
   // Determine if the week should start on Sunday (0) or Monday (1)
   const startDay = weekStartsOn === "sunday" ? 0 : 1;
-
   // Get January 1st of the year
   const janFirst = new Date(year, 0, 1);
 
