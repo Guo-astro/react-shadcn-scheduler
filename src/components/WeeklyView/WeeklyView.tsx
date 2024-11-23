@@ -10,6 +10,7 @@ import TimelineIndicator from "./TimelineIndicator";
 import NewEventDialog from "@/components/NewEventDialog";
 import { ScheduledEvent } from "@/shadcn-scheduler.types";
 import DayHeader from "./DaysHeader";
+import { isValidDate } from "@/utils/DateUtils";
 
 const hours = Array.from(
   { length: 24 },
@@ -155,21 +156,26 @@ const WeeklyView: React.FC<{
     }
 
     const [hours, minutes] = detailedHour.split(":").map(Number);
-    const chosenDay = daysOfWeek[dayIndex % 7].getDate();
+    const chosenDayDate = daysOfWeek[dayIndex % 7]; // Get the full Date object
 
-    // Ensure day is valid
-    if (chosenDay < 1 || chosenDay > 31) {
-      console.error("Invalid day selected:", chosenDay);
+    if (!isValidDate(chosenDayDate)) {
+      console.error("Chosen day is invalid:", chosenDayDate);
       return;
     }
 
+    // Create a new Date object based on chosenDayDate to preserve month and year
     const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      chosenDay,
+      chosenDayDate.getFullYear(),
+      chosenDayDate.getMonth(),
+      chosenDayDate.getDate(),
       hours,
       minutes
     );
+
+    if (!isValidDate(date)) {
+      console.error("Created an invalid date:", date);
+      return;
+    }
 
     handleAddEvent({
       startDate: date,

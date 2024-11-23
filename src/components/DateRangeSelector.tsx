@@ -1,5 +1,3 @@
-// src/components/DateRangeSelector.tsx
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -16,8 +14,13 @@ import { useEffect, useState } from "react";
 import { type UseFormSetValue } from "react-hook-form";
 import type { EventFormData } from "../shadcn-scheduler.types";
 import { CalendarIcon } from "lucide-react";
-import { getFormattedDate } from "@/utils/DateUtils";
+import { getFormattedDate, isValidDate } from "@/utils/DateUtils";
 
+/**
+ * DateRangeSelector Component
+ *
+ * ... [Your existing documentation]
+ */
 export default function DateRangeSelector({
   data,
   setValue,
@@ -30,8 +33,8 @@ export default function DateRangeSelector({
   setValue: UseFormSetValue<EventFormData>;
 }) {
   const [date, setDate] = useState<DateRange | undefined>({
-    from: data ? data.startDate : undefined,
-    to: data ? data.endDate : undefined,
+    from: data && isValidDate(data.startDate) ? data.startDate : undefined,
+    to: data && isValidDate(data.endDate) ? data.endDate : undefined,
   });
 
   const [startTime, setStartTime] = useState<string>(
@@ -45,32 +48,65 @@ export default function DateRangeSelector({
     const jsStartDate = new Date(date.from);
     const jsEndDate = new Date(date.to);
 
-    if (isNaN(jsStartDate.getTime()) || isNaN(jsEndDate.getTime())) {
-      console.error("Invalid start or end date");
+    if (!isValidDate(jsStartDate) || !isValidDate(jsEndDate)) {
+      console.error("Invalid start or end date:", jsStartDate, jsEndDate);
       return;
     }
 
-    const [startHour, startMinute] = startTime.split(":").map(Number);
-    const [endHour, endMinute] = endTime.split(":").map(Number);
+    // Parse startTime and endTime safely
+    const [startHour, startMinute] = parseTime(startTime);
+    const [endHour, endMinute] = parseTime(endTime);
 
-    jsStartDate.setHours(startHour ?? 0, startMinute, 0, 0);
-    jsEndDate.setHours(endHour ?? 3, endMinute, 0, 0);
+    if (
+      startHour === null ||
+      startMinute === null ||
+      endHour === null ||
+      endMinute === null
+    ) {
+      console.error("Invalid time format:", startTime, endTime);
+      return;
+    }
 
+    // Set hours and minutes for start and end dates
+    jsStartDate.setHours(startHour, startMinute, 0, 0);
+    jsEndDate.setHours(endHour, endMinute, 0, 0);
+
+    // Ensure end date is not before start date
     if (jsEndDate < jsStartDate) {
       jsEndDate.setHours(jsStartDate.getHours() + 1);
     }
 
+    // Update form values
     setValue("startDate", jsStartDate);
     setValue("endDate", jsEndDate);
   }, [date, startTime, endTime, setValue]);
 
-  const handleDateSelect = (selectedDate: DateRange | undefined) => {
-    console.log(selectedDate);
-    setDate(selectedDate);
+  /**
+   * Helper function to parse time strings safely.
+   * Returns [hour, minute] or [null, null] if invalid.
+   */
+  const parseTime = (time: string): [number | null, number | null] => {
+    const parts = time.split(":");
+    if (parts.length !== 2) return [null, null];
+    const hour = Number(parts[0]);
+    const minute = Number(parts[1]);
+    if (
+      isNaN(hour) ||
+      isNaN(minute) ||
+      hour < 0 ||
+      hour > 23 ||
+      minute < 0 ||
+      minute > 59
+    ) {
+      return [null, null];
+    }
+    return [hour, minute];
   };
 
-  // Helper function to check if a date is valid
-  const isValidDate = (d?: Date) => d instanceof Date && !isNaN(d.getTime());
+  const handleDateSelect = (selectedDate: DateRange | undefined) => {
+    console.log("Selected Date Range:", selectedDate);
+    setDate(selectedDate);
+  };
 
   return (
     <div className={cn("grid gap-4 p-4 rounded-md", "dark:bg-gray-800")}>

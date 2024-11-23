@@ -43,6 +43,11 @@ export const calculateDaysInMonth = (month: number, year: number) => {
     })
   );
 };
+/**
+ * Helper function to check if a date is valid
+ */
+export const isValidDate = (d?: Date) =>
+  d instanceof Date && !isNaN(d.getTime());
 
 export const calculateDaysInWeek = (
   weekStartsOn: string,
