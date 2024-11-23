@@ -35,7 +35,6 @@ const DayColumn: React.FC<DayColumnProps> = ({
   handleEventStyling,
   handleAddEventWeek,
   detailedHour,
-  badgeColorClasses,
 }) => {
   const onClick = () => {
     if (detailedHour) {

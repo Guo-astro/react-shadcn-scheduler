@@ -18,13 +18,8 @@ const hours = Array.from(
 );
 
 export default function DailyView({
-  prevButton,
-  nextButton,
   classNames,
 }: {
-  prevButton?: React.ReactNode;
-  nextButton?: React.ReactNode;
-  CustomEventComponent?: React.FC<ScheduledEvent>;
   classNames?: { prev?: string; next?: string; addEvent?: string };
 }) {
   const hoursColumnRef = useRef<HTMLDivElement>(null);
