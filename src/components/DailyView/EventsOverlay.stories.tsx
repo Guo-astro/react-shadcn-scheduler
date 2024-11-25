@@ -6,7 +6,7 @@ import { SchedulerEventHandlers } from "../../shadcn-scheduler.types";
 
 // Mock scheduledEventHandlers
 const mockHandlers: SchedulerEventHandlers = {
-  styleScheduledEvent: (event, events) => ({
+  styleScheduledEvent: () => ({
     height: "50px",
     top: "20px",
     left: "10px",
@@ -14,9 +14,9 @@ const mockHandlers: SchedulerEventHandlers = {
     minWidth: "100px",
     zIndex: 1,
   }),
-  addEvent: () => {},
-  updateEvent: () => {},
-  deleteEvent: () => {},
+  addScheduledEvent: () => {},
+  updateScheduledEvent: () => {},
+  deleteScheduledEvent: () => {},
 };
 
 const meta = {
@@ -25,7 +25,6 @@ const meta = {
   tags: ["docsPage"],
   argTypes: {
     events: {
-      control: { type: "array" },
       description: "List of events to display",
     },
     scheduledEventHandlers: {
